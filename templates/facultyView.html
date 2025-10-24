@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Faculty View</title>
+</head>
+<body>
+    <h2>Submitted Assignments</h2>
+    <table border="1">
+        <tr><th>Student</th><th>Filename</th></tr>
+        {% for s in submissions %}
+            <tr>
+                <td>{{ s[0] }}</td>
+                <td>{{ s[1] }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
