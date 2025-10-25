@@ -131,7 +131,7 @@ def faculty():
             submissions.append(submission)
             
         return render_template(
-            'faculty.html', 
+            'facultyView.html', 
             submissions=submissions, 
             faculty_list=FACULTY_LIST, 
             selected_faculty=selected_faculty
