@@ -1,16 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Assignment Upload</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Portal - Select Role</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#4f46e5',
+                        'primary-dark': '#4338ca',
+                        'secondary': '#10b981',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-    <h2>Student Assignment Upload</h2>
-    <form method="POST" action="/upload" enctype="multipart/form-data">
-        <label>Name:</label>
-        <input type="text" name="student_name" required><br><br>
-        <label>File:</label>
-        <input type="file" name="file" required><br><br>
-        <input type="submit" value="Upload">
-    </form>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center font-sans p-4">
+
+    <!-- Main Container Card -->
+    <div class="bg-white p-8 sm:p-12 rounded-2xl shadow-xl max-w-lg w-full transform transition-all hover:shadow-2xl">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-extrabold text-gray-900 mb-2">
+                Assignment Submission Portal
+            </h1>
+            <p class="text-lg text-gray-500">Please select your role to proceed.</p>
+        </header>
+
+        <!-- Role Selection Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+            <!-- Student Card -->
+            <a href="/studentView" 
+               class="flex flex-col items-center justify-center p-6 bg-primary text-white rounded-xl shadow-lg 
+                      hover:bg-primary-dark hover:ring-4 hover:ring-primary/50 transition duration-300 transform 
+                      hover:scale-[1.02] cursor-pointer group">
+                
+                <svg class="w-10 h-10 mb-3 group-hover:rotate-6 transition duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.467 9.5 3.5 6.5 3.5c-3 0-3 5.5-3 5.5v5.5c0 0 0 3 3 3h9c3 0 3-3 3-3V9c0 0 0-5.5-3-5.5c-3 0-4.332 1.967-5.5 2.753z"></path>
+                </svg>
+                
+                <h2 class="text-xl font-semibold">I am a Student</h2>
+                <p class="text-sm opacity-90 mt-1 text-center">Submit your completed assignment here.</p>
+            </a>
+
+            <!-- Faculty Card -->
+            <a href="/faculty" 
+               class="flex flex-col items-center justify-center p-6 bg-secondary text-white rounded-xl shadow-lg 
+                      hover:bg-green-700 hover:ring-4 hover:ring-secondary/50 transition duration-300 transform 
+                      hover:scale-[1.02] cursor-pointer group">
+                
+                <svg class="w-10 h-10 mb-3 group-hover:-rotate-6 transition duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                </svg>
+                
+                <h2 class="text-xl font-semibold">I am Faculty</h2>
+                <p class="text-sm opacity-90 mt-1 text-center">Review and download student submissions.</p>
+            </a>
+            
+        </div>
+
+        <footer class="mt-8 text-center text-gray-400 text-xs">
+            &copy; 2025 Assignment Portal. Powered by AWS.
+        </footer>
+    </div>
+
 </body>
 </html>
