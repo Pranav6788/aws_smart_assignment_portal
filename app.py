@@ -18,7 +18,7 @@ s3 = boto3.client('s3')
 # NOTE: These values must be obtained after setting up your User Pool in the AWS Console.
 AWS_REGION = 'ap-south-1'  # Ensure this matches your RDS and Cognito region
 USER_POOL_ID = 'ap-south-1_mMrNDKvR6' # Placeholder
-CLIENT_ID = '547vdvims66h8sr2n2n81ja3dp' # Placeholder App Client ID
+CLIENT_ID = '6cbf18rike9qb69j0ed4nrc80' # Placeholder App Client ID
 
 # Initialize Cognito Client
 cognito_client = boto3.client('cognito-idp', region_name=AWS_REGION)
