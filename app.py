@@ -8,7 +8,7 @@ import json # Added for processing Cognito response attributes
 # --- Initialization ---
 app = Flask(__name__)
 # Set a secret key for session management (MUST be secure in production)
-app.secret_key = 'pranavyuvaraj_super_secret_key' 
+app.secret_key = 'p8f5b6penvssf5epnk831qrta7ju9vm300kmn3ig3nch7mhlbkd' 
 
 # --- Configuration & Global Data ---
 S3_BUCKET = "assignment-submissions-portal"
