@@ -191,7 +191,7 @@ def signup():
             )
 
             # 4. Log the signup activity
-             log_activity(email, 'SIGNUP', f"Role: {role}, Name: {name}")
+            log_activity(email, 'SIGNUP', f"Role: {role}, Name: {name}")
 
             flash('Account created and confirmed successfully! Please log in.', 'success')
             return redirect(url_for('login'))
