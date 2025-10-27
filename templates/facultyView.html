@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Faculty Submissions | Assignment Portal</title>
-    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -15,105 +14,107 @@
                     },
                     colors: {
                         'primary': '#4f46e5',
+                        'accent': '#10b981',
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="bg-gray-50 min-h-screen font-sans p-6">
+<body class="bg-gray-100 min-h-screen">
 
-    <div class="max-w-7xl mx-auto bg-white p-8 rounded-2xl shadow-xl">
-        <header class="mb-8 border-b pb-4">
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">Faculty Submissions Review</h1>
-            <p class="text-gray-500">Filter, review, and grade student assignments.</p>
-            <a href="/" class="text-sm text-primary hover:underline">← Back to Role Selection</a>
-        </header>
+    <!-- Navigation/Header -->
+    <header class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-gray-900">Faculty Submissions Portal</h1>
+            <a href="{{ url_for('logout') }}" class="text-sm font-medium text-red-600 hover:text-red-800 transition">Log Out</a>
+        </div>
+    </header>
 
-        <!-- Faculty Filter Dropdown -->
-        <form method="GET" action="/faculty" class="mb-6 flex items-center space-x-4 bg-gray-100 p-4 rounded-lg shadow-inner">
-            <label for="faculty_filter" class="text-lg font-semibold text-gray-700">Filter by Faculty:</label>
-            <select id="faculty_filter" name="faculty_name" 
-                    onchange="this.form.submit()"
-                    class="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary bg-white transition duration-150 w-full max-w-xs">
-                
-                <option value="All" {% if not selected_faculty or selected_faculty == 'All' %}selected{% endif %}>Show All Submissions</option>
-                {% for faculty in faculty_list %}
-                <option value="{{ faculty }}" {% if selected_faculty == faculty %}selected{% endif %}>{{ faculty }}</option>
-                {% endfor %}
-            </select>
-            {% if selected_faculty and selected_faculty != 'All' %}
-            <span class="text-sm text-green-600 font-medium">Viewing: {{ selected_faculty }}</span>
-            {% endif %}
-        </form>
-
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        
+        <h2 class="text-3xl font-extrabold text-gray-900 mb-6">
+            Submissions for {{ logged_in_faculty_name }}
+        </h2>
 
         {% if submissions %}
-        <div class="overflow-x-auto shadow-md rounded-xl">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-primary/90 text-white">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">ID</th>
-                        <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Student Name</th>
-                        <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Faculty</th>
-                        <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">File / Uploaded</th>
-                        <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Marks</th>
-                        <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider w-1/4">Remarks & Action</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    {% for submission in submissions %}
-                    <tr class="hover:bg-gray-50 transition duration-100">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ submission.id }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ submission.student_name }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ submission.faculty_name }}</td>
-                        <td class="px-6 py-4 text-sm text-gray-700">
-                            <span class="block font-medium">{{ submission.filename }}</span>
-                            <span class="text-xs text-gray-500">{{ submission.uploaded_at }}</span>
-                            
-                            {% if submission.view_url %}
-                            <a href="{{ submission.view_url }}" target="_blank" class="mt-1 inline-flex items-center text-xs text-indigo-600 hover:text-indigo-800 font-medium">
-                                View Submission
-                                <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                            </a>
-                            {% else %}
-                            <span class="text-xs text-red-500">Link Error</span>
-                            {% endif %}
-                        </td>
-                        
-                        <!-- Grading Form -->
-                        <form method="POST" action="/update_submission" class="contents">
-                            <input type="hidden" name="submission_id" value="{{ submission.id }}">
-                            <input type="hidden" name="current_faculty" value="{{ selected_faculty or 'All' }}">
-                            
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <input type="number" name="marks" value="{{ submission.marks }}" placeholder="Mark" min="0" max="100"
-                                       class="w-16 px-2 py-1 border border-gray-300 rounded-lg text-center focus:ring-primary focus:border-primary text-sm">
+            <div class="bg-white rounded-2xl shadow-xl overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Student Name
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                File & Uploaded At
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                View
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
+                                Marks (Out of 100)
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
+                                Remarks
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for submission in submissions %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {{ submission.student_name }}
                             </td>
-
-                            <td class="px-6 py-4 text-sm">
-                                <textarea name="remarks" placeholder="Add remarks..." rows="2"
-                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary text-sm">{{ submission.remarks }}</textarea>
-                                
-                                <button type="submit" 
-                                        class="mt-2 w-full py-1.5 bg-secondary text-white rounded-lg text-xs font-semibold 
-                                               hover:bg-green-700 transition duration-150 shadow-md">
-                                    Update Grade
-                                </button>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <span class="block font-medium">{{ submission.filename }}</span>
+                                <span class="text-xs text-gray-400">{{ submission.uploaded_at }}</span>
                             </td>
-                        </form>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                {% if submission.view_url %}
+                                    <a href="{{ submission.view_url }}" target="_blank" 
+                                       class="text-primary hover:text-indigo-600 transition">
+                                        View Submission
+                                    </a>
+                                {% else %}
+                                    <span class="text-red-400">Error generating link</span>
+                                {% endif %}
+                            </td>
+                            
+                            <!-- Grading Form -->
+                            <form method="POST" action="{{ url_for('update_submission') }}">
+                                <input type="hidden" name="submission_id" value="{{ submission.id }}">
+                                <td class="px-6 py-4">
+                                    <input type="number" name="marks" value="{{ submission.marks }}" min="0" max="100" 
+                                           class="w-full px-2 py-1 border border-gray-300 rounded-lg text-sm focus:ring-accent focus:border-accent">
+                                </td>
+                                <td class="px-6 py-4">
+                                    <textarea name="remarks" rows="2" 
+                                              class="w-full px-2 py-1 border border-gray-300 rounded-lg text-sm focus:ring-accent focus:border-accent" 
+                                              placeholder="Add remarks...">{{ submission.remarks }}</textarea>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <button type="submit" 
+                                            class="inline-flex justify-center py-2 px-3 border border-transparent rounded-lg shadow-sm 
+                                                   text-xs font-medium text-white bg-accent hover:bg-green-700 transition">
+                                        Save Grade
+                                    </button>
+                                </td>
+                            </form>
+                            <!-- End Grading Form -->
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% else %}
-        <p class="text-gray-600 p-4 border border-dashed border-gray-300 rounded-lg">
-            No submissions found for the selected faculty ({{ selected_faculty or 'All' }}).
-        </p>
+            <div class="bg-white p-6 rounded-2xl shadow-xl text-center">
+                <p class="text-lg text-gray-600">No submissions found yet for you, {{ logged_in_faculty_name }}.</p>
+            </div>
         {% endif %}
 
-    </div>
-
+    </main>
 </body>
 </html>
