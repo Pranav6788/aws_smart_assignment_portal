@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Assignment Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#4f46e5',
+                        'accent': '#10b981',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+
+    <!-- Login Card -->
+    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-sm w-full">
+        <header class="text-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-900 mb-1">Sign In to Portal</h2>
+            <p class="text-sm text-gray-500">
+                Don't have an account? 
+                <a href="{{ url_for('signup') }}" class="text-primary hover:underline font-medium">Sign Up</a>
+            </p>
+        </header>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="mb-4 space-y-2">
+                {% for category, message in messages %}
+                    <li class="p-3 rounded-lg text-sm {% if category == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}">
+                        {{ message }}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('login') }}" class="space-y-4">
+            
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email:</label>
+                <input type="email" id="email" name="email" required 
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm 
+                              focus:outline-none focus:ring-primary focus:border-primary transition">
+            </div>
+
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password:</label>
+                <input type="password" id="password" name="password" required 
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm 
+                              focus:outline-none focus:ring-primary focus:border-primary transition">
+            </div>
+            
+            <button type="submit" 
+                    class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm 
+                           text-sm font-semibold text-white bg-primary hover:bg-indigo-600 
+                           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition">
+                Log In
+            </button>
+        </form>
+
+    </div>
+
+</body>
+</html>
