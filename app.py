@@ -133,10 +133,10 @@ def signup():
         email = request.form['email']
         password = request.form['password']
         role = request.form['role']
-        name = request.form.get('name') # Only required for faculty
+        name = request.form.get('name')  # Only required for faculty
 
         try:
-            # 1. Create User in Cognito User Pool
+            # 1. Create the user in Cognito User Pool
             cognito_client.sign_up(
                 ClientId=CLIENT_ID,
                 Username=email,
@@ -146,22 +146,23 @@ def signup():
                     {'Name': 'name', 'Value': name if role == 'faculty' else email},
                 ]
             )
-            
-            # NOTE: New users in Cognito are unconfirmed by default. 
-            # We skip confirmation logic for this example, but it's mandatory in production.
-            
-            # 2. Set the user's role (group)
-            # Admin must manually confirm the user and add them to the correct group 
-            # in a production environment, but we simulate it here:
+
+            # 2. Auto-confirm the user immediately (Admin action)
+            cognito_client.admin_confirm_sign_up(
+                UserPoolId=USER_POOL_ID,
+                Username=email
+            )
+
+            # 3. Add the confirmed user to their respective group (student/faculty)
             cognito_client.admin_add_user_to_group(
                 UserPoolId=USER_POOL_ID,
                 Username=email,
-                GroupName=role # 'student' or 'faculty'
+                GroupName=role
             )
-            
-            flash('Account created successfully! Please log in (user is auto-confirmed/grouped for this example).', 'success')
+
+            flash('Account created and confirmed successfully! Please log in.', 'success')
             return redirect(url_for('login'))
-        
+
         except cognito_client.exceptions.UsernameExistsException:
             flash('Email already registered. Please log in.', 'error')
             return redirect(url_for('signup'))
@@ -170,6 +171,7 @@ def signup():
             return redirect(url_for('signup'))
 
     return render_template('signup.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
