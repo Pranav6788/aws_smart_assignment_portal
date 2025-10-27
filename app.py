@@ -244,7 +244,7 @@ def landing_page():
     user_details = get_user_details_from_session()
     return render_template('index.html', session=session, user_details=user_details)
 
-@app.route('/student-upload')
+@app.route('/studentView')
 @login_required('student')
 def student_upload_form():
     """Renders the dedicated upload form page with dynamic faculty list."""
