@@ -15,8 +15,7 @@ app.secret_key = 'p8f5b6penvssf5epnk831qrta7ju9vm300kmn3ig3nch7mhlbkd'
 S3_BUCKET = "assignment-submissions-portal"
 s3 = boto3.client('s3')
 
-# --- COGNITO CONFIGURATION (REPLACE WITH YOUR AWS DETAILS) ---
-# NOTE: These values must be obtained after setting up your User Pool in the AWS Console.
+
 AWS_REGION = 'ap-south-1'  # Ensure this matches your RDS and Cognito region
 USER_POOL_ID = 'ap-south-1_mMrNDKvR6' # Placeholder
 CLIENT_ID = '6cbf18rike9qb69j0ed4nrc80' # Placeholder App Client ID
