@@ -6,12 +6,10 @@ from datetime import datetime # Keep this for direct use
 from botocore.exceptions import ClientError
 import json # Added for processing Cognito response attributes
 
-# --- Initialization ---
+
 app = Flask(__name__)
-# Set a secret key for session management (MUST be secure in production)
 app.secret_key = 'p8f5b6penvssf5epnk831qrta7ju9vm300kmn3ig3nch7mhlbkd' 
 
-# --- Configuration & Global Data ---
 S3_BUCKET = "assignment-submissions-portal"
 s3 = boto3.client('s3')
 
@@ -46,14 +44,10 @@ def log_activity(user_email, activity_type, details=""):
         "activity_type": activity_type,
         "details": details
     }
-    
-    # Define the S3 key partitioned by date for efficient querying (e.g., with Athena)
-    # The 'logs/' prefix ensures it goes into the correct folder within the bucket.
     date_path = now.strftime("year=%Y/month=%m/day=%d")
     log_key = f"logs/{date_path}/{now.strftime('%H%M%S')}-{user_email.split('@')[0]}.json" # Use email prefix for filename
     
     try:
-        # Upload the JSON log data to the specified S3 bucket
         s3.put_object(
             Bucket=S3_BUCKET, # Now set to S3_BUCKET
             Key=log_key,
@@ -61,27 +55,15 @@ def log_activity(user_email, activity_type, details=""):
             ContentType='application/json'
         )
     except ClientError as e:
-        # Catch specific Boto3 errors related to S3 access
         print(f"S3 Error logging activity for {user_email}: {e}")
     except Exception as e:
         print(f"General Error logging activity for {user_email}: {e}")
-        # Log this failure locally or to CloudWatch, but don't halt the user request
 
 def get_user_details_from_session():
-    """Retrieves user details (role and name) from Cognito using the session token."""
     if 'id_token' not in session:
         return None
     
     try:
-        # Use a token to get user details (simulating Cognito's GetUser)
-        # Note: In a real app, we might use the Access Token and the GetUser API call.
-        # For simplicity here, we assume the token holds enough info or can be easily validated.
-        
-        # MOCK: In a true Cognito implementation, this step involves decoding the JWT ID token
-        # and/or calling cognito_client.get_user().
-        
-        # Since we can't fully decode the JWT here, we'll store role and name in the session 
-        # upon successful login (see login() function).
         return {
             'email': session.get('email'),
             'role': session.get('role'),
@@ -92,7 +74,6 @@ def get_user_details_from_session():
         return None
 
 def login_required(role=None):
-    """Decorator to check for logged-in user and optional role."""
     def wrapper(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
@@ -111,10 +92,6 @@ def login_required(role=None):
     return wrapper
 
 def get_registered_faculties():
-    """
-    Dynamically retrieves names of all users registered as 'faculty' 
-    from the Cognito User Pool (requires ListUsers and ListGroups permissions on the execution role).
-    """
     faculty_list = []
     try:
         # 1. Find all users in the 'faculty' group
