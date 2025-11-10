@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import boto3
+from botocore.client import Config
 import pymysql
 from functools import wraps
 from datetime import datetime # Keep this for direct use
@@ -19,7 +20,7 @@ USER_POOL_ID = 'ap-south-1_mMrNDKvR6' # Placeholder
 CLIENT_ID = '6cbf18rike9qb69j0ed4nrc80' # Placeholder App Client ID
 
 # Initialize Cognito Client
-cognito_client = boto3.client('cognito-idp', region_name=AWS_REGION)
+cognito_client = boto3.client('cognito-idp', region_name=AWS_REGION,  config=Config(signature_version='s3v4'))
 
 # RDS Configuration
 db_config = {
