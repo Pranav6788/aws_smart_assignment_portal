@@ -125,7 +125,8 @@ def create_presigned_url(bucket_name, object_name, expiration=3600):
         # NOTE: The EC2 IAM Role must have s3:GetObject on the submission path.
         response = s3.generate_presigned_url('get_object',
                                              Params={'Bucket': bucket_name,
-                                                     'Key': object_name},
+                                                     'Key': object_name,
+                                                     'ResponseContentDisposition': 'inline'},
                                              ExpiresIn=expiration)
     except Exception as e:
         print(f"Error generating presigned URL for {object_name}: {e}")
